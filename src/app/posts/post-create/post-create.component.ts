@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
-import { LifecycleHooks } from '@angular/compiler/src/lifecycle_reflector';
 
 @Component({
   selector: 'app-post-create',
   templateUrl: './post-create.component.html',
 })
 export class PostCreateComponent {
+  textareaValue = '';
   postContent = '';
-  onAddPost(postInput: HTMLTextAreaElement) {
-    console.dir(postInput);
-    this.postContent = postInput.value;
+
+  onAddPost() {
+    this.postContent = this.textareaValue;
   }
 }
