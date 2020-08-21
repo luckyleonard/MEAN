@@ -7,10 +7,9 @@
       rows="10"
       [(ngModel)]="textareaValue"
     ></textarea>
-
-    <button mat-raised-button color="accent" (click)="onAddPost()">
-      Add a Post
-    </button>
   </mat-form-field>
+  <button mat-raised-button color="accent" (click)="onAddPost()">
+    Add a Post
+  </button>
 </mat-card>
 <p>{{ postContent }}</p>
