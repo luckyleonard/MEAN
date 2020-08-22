@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
-import { Post } from './../post.model';
+import { PostsService } from './../post.service';
 
 @Component({
   selector: 'app-post-create',
@@ -9,18 +9,14 @@ import { Post } from './../post.model';
   styleUrls: ['./post-create.component.scss'],
 })
 export class PostCreateComponent {
-  postTitle = '';
-  postContent = '';
-  @Output() postCreated = new EventEmitter<Post>();
-
+  // postTitle = '';
+  // postContent = '';
+  constructor(public postsService: PostsService) {} //构建一个PostsService实例
   onAddPost(postForm: NgForm) {
     if (postForm.invalid) {
       return;
     }
-    const post: Post = {
-      title: postForm.value.title,
-      content: postForm.value.content,
-    };
-    this.postCreated.emit(post); //向父级发送自己的属性值
+    this.postsService.addPost(postForm.value.title, postForm.value.content);
+    postForm.resetForm();
   }
 }
