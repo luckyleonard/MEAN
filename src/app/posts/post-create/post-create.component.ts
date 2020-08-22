@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
+import { Post } from './../post.model';
 
 @Component({
   selector: 'app-post-create',
@@ -8,12 +9,12 @@ import { Component, Output, EventEmitter } from '@angular/core';
 export class PostCreateComponent {
   postTitle = '';
   postContent = '';
-  @Output() postCreated = new EventEmitter();
+  @Output() postCreated = new EventEmitter<Post>();
 
   onAddPost() {
-    const post = {
-      postTitle: this.postTitle,
-      postContent: this.postContent,
+    const post: Post = {
+      title: this.postTitle,
+      content: this.postContent,
     };
     this.postCreated.emit(post); //向父级发送自己的属性值
   }

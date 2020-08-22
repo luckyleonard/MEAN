@@ -1,9 +1,9 @@
 <mat-accordion multi *ngIf="posts.length > 0">
   <mat-expansion-panel *ngFor="let post of posts">
     <mat-expansion-panel-header>
-      {{ post.postTitle }}
+      {{ post.title }}
     </mat-expansion-panel-header>
-    <p>{{ post.postContent }}</p>
+    <p>{{ post.content }}</p>
   </mat-expansion-panel>
 </mat-accordion>
 <p class="info-text mat-body-1" *ngIf="posts.length === 0">
