@@ -1,17 +1,35 @@
 <mat-card>
-  <h2>This is post create component</h2>
-  <mat-form-field>
-    <input name="title" matInput [(ngModel)]="postTitle" />
-  </mat-form-field>
-  <mat-form-field>
-    <textarea
-      matInput
-      name="content"
-      rows="4"
-      [(ngModel)]="postContent"
-    ></textarea>
-  </mat-form-field>
-  <button mat-raised-button color="accent" (click)="onAddPost()">
-    Add a Post
-  </button>
+  <form (submit)="onAddPost(postForm)" #postForm="ngForm">
+    <h2>This is post create component</h2>
+    <mat-form-field>
+      <mat-label>Enter post title</mat-label>
+      <input
+        name="title"
+        type="text"
+        matInput
+        required
+        minlength="3"
+        ngModel
+        #title="ngModel"
+      />
+      <mat-error *ngIf="title.invalid">please input valid title!</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Enter post content</mat-label>
+      <textarea
+        matInput
+        name="content"
+        rows="4"
+        required
+        ngModel
+        #content="ngModel"
+      ></textarea>
+      <mat-error *ngIf="content.invalid"
+        >please input some amazing content!</mat-error
+      >
+    </mat-form-field>
+    <button mat-raised-button color="accent" type="submit">
+      Add a Post
+    </button>
+  </form>
 </mat-card>
