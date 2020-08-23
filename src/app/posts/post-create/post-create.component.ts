@@ -16,7 +16,7 @@ export class PostCreateComponent {
     if (postForm.invalid) {
       return;
     }
-    this.postsService.addPost(postForm.value.title, postForm.value.content);
+    this.postsService.addPost(postForm.value.title, postForm.value.content); //调用postService的mutation
     postForm.resetForm();
   }
 }
