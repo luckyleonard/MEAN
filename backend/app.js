@@ -19,7 +19,14 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post("api/posts", (req, res) => {
+// app.use((req, res, next) => {
+//   if (req.method === "OPTIONS") {
+//     return res.sendStatus(200);
+//   }
+//   next();
+// }); //The preflight request is just a request with method "OPTIONS" that goes to the very same endpoint. It should respond 200
+
+app.post("/api/posts", (req, res) => {
   const post = req.body;
   console.log(post);
   res.status(201).json({
@@ -27,7 +34,7 @@ app.post("api/posts", (req, res) => {
   });
 });
 
-app.get("api/posts", (req, res) => {
+app.get("/api/posts", (req, res) => {
   const posts = [
     {
       id: "fadf12421l",
