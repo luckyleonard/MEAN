@@ -1,7 +1,18 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+const { connectionStr } = require("./config");
 
 const app = express();
+
+mongoose.connect(
+  connectionStr,
+  { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
+  () => {
+    console.log("Connect to MongoDB Success");
+  }
+);
+mongoose.connection.on("error", console.error);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -35,18 +46,18 @@ app.post("/api/posts", (req, res) => {
 });
 
 app.get("/api/posts", (req, res) => {
-  const posts = [
-    {
-      id: "fadf12421l",
-      title: "First server-side post",
-      content: "This is coming from the server",
-    },
-    {
-      id: "ksajflaj132",
-      title: "Second server-side post",
-      content: "This is coming from the server!",
-    },
-  ];
+  // const posts = [
+  //   {
+  //     id: "fadf12421l",
+  //     title: "First server-side post",
+  //     content: "This is coming from the server",
+  //   },
+  //   {
+  //     id: "ksajflaj132",
+  //     title: "Second server-side post",
+  //     content: "This is coming from the server!",
+  //   },
+  // ];
   res.status(200).json({
     message: "Posts fetched successfully!",
     posts: posts,
