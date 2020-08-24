@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const { connectionStr } = require("./config");
+const Post = require("./models/post");
 
 const app = express();
 
@@ -38,10 +39,16 @@ app.use((req, res, next) => {
 // }); //The preflight request is just a request with method "OPTIONS" that goes to the very same endpoint. It should respond 200
 
 app.post("/api/posts", (req, res) => {
-  const post = req.body;
-  console.log(post);
-  res.status(201).json({
-    message: "Post added successfully",
+  const { title, content } = req.body;
+  const post = new Post({
+    title,
+    content,
+  });
+  post.save().then((createdPost) => {
+    res.status(201).json({
+      message: "Post added successfully",
+      postId: createdPost._id,
+    });
   });
 });
 
@@ -58,9 +65,11 @@ app.get("/api/posts", (req, res) => {
   //     content: "This is coming from the server!",
   //   },
   // ];
-  res.status(200).json({
-    message: "Posts fetched successfully!",
-    posts: posts,
+  Post.find().then((resData) => {
+    res.status(200).json({
+      message: "Posts fetched successfully!",
+      posts: resData,
+    });
   });
 });
 
