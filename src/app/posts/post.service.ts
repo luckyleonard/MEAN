@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { Post } from './post.model';
 
@@ -13,11 +14,20 @@ export class PostsService {
 
   getPosts() {
     this.httpClient
-      .get<{ message: string; posts: Post[] }>(
-        'http://localhost:3000/api/posts'
+      .get<{ message: string; posts: any }>('http://localhost:3000/api/posts')
+      .pipe(
+        map((postData) => {
+          return postData.posts.map((post) => {
+            return {
+              title: post.title,
+              content: post.content,
+              id: post._id,
+            };
+          });
+        })
       )
-      .subscribe((postData) => {
-        this.posts = postData.posts;
+      .subscribe((transformedPosts) => {
+        this.posts = transformedPosts;
         this.postsUpdated.next([...this.posts]);
       }); //subscribe才会发起http请求
   }
@@ -27,11 +37,11 @@ export class PostsService {
   }
 
   addPost(title: string, content: string) {
-    const post: Post = { id: null, title, content };
+    const post: Post = { title, content };
     this.httpClient
       .post<{ message: string }>('http://localhost:3000/api/posts', post)
       .subscribe((responseData) => {
-        console.log(responseData.message);
+        console.log(responseData);
         this.posts.push(post); //更新本地数据
         this.postsUpdated.next([...this.posts]); //更新observable
       });
