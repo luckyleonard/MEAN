@@ -6,14 +6,19 @@ const Post = require("./models/post");
 
 const app = express();
 
-mongoose.connect(
-  connectionStr,
-  { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
-  () => {
+mongoose
+  .connect(connectionStr, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+  })
+  .then(() => {
     console.log("Connect to MongoDB Success");
-  }
-);
-mongoose.connection.on("error", console.error);
+  })
+  .catch((error) => {
+    console.error("Connect to MongoDB fail with error:" + error);
+  });
+// mongoose.connection.on("error", console.error);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -31,12 +36,12 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use((req, res, next) => {
-//   if (req.method === "OPTIONS") {
-//     return res.sendStatus(200);
-//   }
-//   next();
-// }); //The preflight request is just a request with method "OPTIONS" that goes to the very same endpoint. It should respond 200
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+}); //The preflight request is just a request with method "OPTIONS" that goes to the very same endpoint. It should respond 200
 
 app.post("/api/posts", (req, res) => {
   const { title, content } = req.body;
@@ -70,6 +75,13 @@ app.get("/api/posts", (req, res) => {
       message: "Posts fetched successfully!",
       posts: resData,
     });
+  });
+});
+
+app.delete("/api/posts/:postId", (req, res) => {
+  Post.deleteOne({ _id: req.params.postId }).then((result) => {
+    console.log(result);
+    res.status(200).json({ message: "Post deleted!" });
   });
 });
 

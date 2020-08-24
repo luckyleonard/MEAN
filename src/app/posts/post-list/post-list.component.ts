@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 
 import { Post } from './../post.model';
 import { PostsService } from './../post.service';
+import { renderFlagCheckIfStmt } from '@angular/compiler/src/render3/view/template';
 
 @Component({
   selector: 'app-post-list',
@@ -28,6 +29,10 @@ export class PostListComponent implements OnInit, OnDestroy {
       .subscribe((posts: Post[]) => {
         this.posts = posts;
       });
+  }
+
+  onDelete(postId: string) {
+    this.postsService.deletePost(postId);
   }
 
   ngOnDestroy() {
