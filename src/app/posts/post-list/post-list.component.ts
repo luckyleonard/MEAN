@@ -3,7 +3,6 @@ import { Subscription } from 'rxjs';
 
 import { Post } from './../post.model';
 import { PostsService } from './../post.service';
-import { renderFlagCheckIfStmt } from '@angular/compiler/src/render3/view/template';
 
 @Component({
   selector: 'app-post-list',
