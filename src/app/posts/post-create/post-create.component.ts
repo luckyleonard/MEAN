@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 
 import { PostsService } from './../post.service';
@@ -16,6 +16,7 @@ export class PostCreateComponent implements OnInit {
   post: Post;
   mode: string = 'Create';
   isLoading: boolean = false;
+  form: FormGroup; //替换ngForm
   private postId: string;
 
   constructor(
@@ -24,6 +25,15 @@ export class PostCreateComponent implements OnInit {
   ) {} //构建一个PostsService实例 和 route实例获取params
 
   ngOnInit() {
+    this.form = new FormGroup({
+      title: new FormControl(null, {
+        validators: [Validators.required, Validators.minLength(3)],
+      }),
+      content: new FormControl(null, {
+        validators: [Validators.required],
+      }),
+    });
+
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
         this.mode = 'Edit';
@@ -34,8 +44,12 @@ export class PostCreateComponent implements OnInit {
             id: postData._id,
             title: postData.title,
             content: postData.content,
-          };
+          }; //可能可以优化
           this.isLoading = false;
+          this.form.setValue({
+            title: this.post.title,
+            content: this.post.content,
+          });
         });
       } else {
         this.mode = 'Create';
@@ -44,21 +58,21 @@ export class PostCreateComponent implements OnInit {
     });
   }
 
-  onSavePost(postForm: NgForm) {
-    if (postForm.invalid) {
+  onSavePost() {
+    if (this.form.invalid) {
       return;
     }
     this.isLoading = true;
     if (this.mode === 'Create') {
-      this.postsService.addPost(postForm.value.title, postForm.value.content); //调用postService的mutation
+      this.postsService.addPost(this.form.value.title, this.form.value.content); //调用postService的mutation
     } else {
       this.postsService.updatePost(
         this.postId,
-        postForm.value.title,
-        postForm.value.content
+        this.form.value.title,
+        this.form.value.content
       );
     }
 
-    postForm.resetForm();
+    this.form.reset();
   }
 }
