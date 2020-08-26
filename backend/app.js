@@ -57,6 +57,18 @@ app.post("/api/posts", (req, res) => {
   });
 });
 
+app.patch("/api/posts/:postId", (req, res) => {
+  Post.updateOne(
+    { _id: req.params.postId },
+    {
+      title: req.body.title,
+      content: req.body.content,
+    }
+  ).then((result) => {
+    res.status(200).json({ message: "Update successful" });
+  });
+});
+
 app.get("/api/posts", (req, res) => {
   // const posts = [
   //   {
@@ -75,6 +87,16 @@ app.get("/api/posts", (req, res) => {
       message: "Posts fetched successfully!",
       posts: resData,
     });
+  });
+});
+
+app.get("/api/posts/:postId", (req, res) => {
+  Post.findById(req.params.postId).then((post) => {
+    if (post) {
+      res.status(200).json(post);
+    } else {
+      res.status(404).json({ message: "Post not found" });
+    }
   });
 });
 
