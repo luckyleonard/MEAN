@@ -26,10 +26,15 @@
     </div>
     <div
       class="image-previewer"
-      *ngIf="imagePreviewUrl && imagePreviewUrl !== ''"
+      *ngIf="
+        imagePreviewUrl && imagePreviewUrl !== '' && form.get('image').valid
+      "
     >
       <img [src]="imagePreviewUrl" [alt]="form.value.title" />
     </div>
+    <mat-error *ngIf="form.get('image').invalid"
+      >please upload a picture!</mat-error
+    >
     <mat-form-field>
       <textarea
         matInput
