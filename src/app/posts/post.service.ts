@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -10,7 +11,7 @@ export class PostsService {
   private posts: Post[] = [];
   private postsUpdated = new Subject<Post[]>();
 
-  constructor(public httpClient: HttpClient) {} //初始化httpClient 用来发送请求
+  constructor(public httpClient: HttpClient, private router: Router) {} //初始化httpClient 用来发送请求
 
   getPosts() {
     this.httpClient
@@ -55,17 +56,28 @@ export class PostsService {
         post.id = responseData.postId; //新添加的数据 添加db生成的_id
         this.posts.push(post); //更新本地数据
         this.postsUpdated.next([...this.posts]); //更新observable
+        this.router.navigate(['/']); //返回首页
       });
   }
 
   updatePost(postId: string, title: string, content: string) {
-    const post: Post = { id: postId, title, content };
+    const updatedPost: Post = { id: postId, title, content };
     this.httpClient
       .patch<{ message: string }>(
         'http://localhost:3000/api/posts/' + postId,
-        post
+        updatedPost
       )
-      .subscribe((response) => console.log(response));
+      .subscribe((response) => {
+        const updatedPosts = [...this.posts];
+        this.posts = updatedPosts.map((post) => {
+          if (post.id === updatedPost.id) {
+            return updatedPost;
+          }
+          return post;
+        });
+        this.postsUpdated.next([...this.posts]);
+        this.router.navigate(['/']);
+      });
   }
 
   deletePost(postId: string) {
