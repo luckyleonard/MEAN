@@ -1,27 +1,27 @@
 <mat-card>
-  <form (submit)="onAddPost(postForm)" #postForm="ngForm">
-    <h2>This is post create component</h2>
+  <form (submit)="onSavePost(postForm)" #postForm="ngForm">
+    <h2>This is post {{ mode }} component</h2>
     <mat-form-field>
-      <mat-label>Enter post title</mat-label>
       <input
+        matInput
         name="title"
         type="text"
-        matInput
         required
         minlength="3"
-        ngModel
+        placeholder="Post Title"
+        [ngModel]="post?.title"
         #title="ngModel"
       />
       <mat-error *ngIf="title.invalid">please input valid title!</mat-error>
     </mat-form-field>
     <mat-form-field>
-      <mat-label>Enter post content</mat-label>
       <textarea
         matInput
         name="content"
         rows="4"
         required
-        ngModel
+        placeholder="Post Content"
+        [ngModel]="post?.content"
         #content="ngModel"
       ></textarea>
       <mat-error *ngIf="content.invalid"
