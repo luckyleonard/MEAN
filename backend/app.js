@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const { connectionStr } = require("./config");
-const Post = require("./models/post");
+const postsRouter = require("./routes/posts");
 
 const app = express();
 
@@ -43,68 +43,6 @@ app.use((req, res, next) => {
   next();
 }); //The preflight request is just a request with method "OPTIONS" that goes to the very same endpoint. It should respond 200
 
-app.post("/api/posts", (req, res) => {
-  const { title, content } = req.body;
-  const post = new Post({
-    title,
-    content,
-  });
-  post.save().then((createdPost) => {
-    res.status(201).json({
-      message: "Post added successfully",
-      postId: createdPost._id,
-    });
-  });
-});
-
-app.patch("/api/posts/:postId", (req, res) => {
-  Post.updateOne(
-    { _id: req.params.postId },
-    {
-      title: req.body.title,
-      content: req.body.content,
-    }
-  ).then((result) => {
-    res.status(200).json({ message: "Update successful" });
-  });
-});
-
-app.get("/api/posts", (req, res) => {
-  // const posts = [
-  //   {
-  //     id: "fadf12421l",
-  //     title: "First server-side post",
-  //     content: "This is coming from the server",
-  //   },
-  //   {
-  //     id: "ksajflaj132",
-  //     title: "Second server-side post",
-  //     content: "This is coming from the server!",
-  //   },
-  // ];
-  Post.find().then((resData) => {
-    res.status(200).json({
-      message: "Posts fetched successfully!",
-      posts: resData,
-    });
-  });
-});
-
-app.get("/api/posts/:postId", (req, res) => {
-  Post.findById(req.params.postId).then((post) => {
-    if (post) {
-      res.status(200).json(post);
-    } else {
-      res.status(404).json({ message: "Post not found" });
-    }
-  });
-});
-
-app.delete("/api/posts/:postId", (req, res) => {
-  Post.deleteOne({ _id: req.params.postId }).then((result) => {
-    console.log(result);
-    res.status(200).json({ message: "Post deleted!" });
-  });
-});
+app.use("/api/posts", postsRouter);
 
 module.exports = app;

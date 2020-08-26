@@ -14,17 +14,18 @@ export class PostCreateComponent implements OnInit {
   // postTitle = '';
   // postContent = '';
   post: Post;
-  mode = 'create';
+  mode = 'Create';
   private postId: string;
 
   constructor(
     public postsService: PostsService,
     public route: ActivatedRoute
   ) {} //构建一个PostsService实例 和 route实例获取params
+
   ngOnInit() {
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
-        this.mode = 'edit';
+        this.mode = 'Edit';
         this.postId = paramMap.get('postId');
         this.postsService.getPost(this.postId).subscribe((postData) => {
           this.post = {
@@ -34,7 +35,7 @@ export class PostCreateComponent implements OnInit {
           };
         });
       } else {
-        this.mode = 'create';
+        this.mode = 'Create';
         this.postId = null;
       }
     });
@@ -44,7 +45,7 @@ export class PostCreateComponent implements OnInit {
     if (postForm.invalid) {
       return;
     }
-    if (this.mode === 'create') {
+    if (this.mode === 'Create') {
       this.postsService.addPost(postForm.value.title, postForm.value.content); //调用postService的mutation
     } else {
       this.postsService.updatePost(
