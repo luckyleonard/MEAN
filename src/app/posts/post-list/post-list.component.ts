@@ -27,7 +27,7 @@ export class PostListComponent implements OnInit, OnDestroy {
       .getPostsUpdatedListener()
       .subscribe((posts: Post[]) => {
         this.posts = posts;
-      });
+      }); //bind this observable
   }
 
   onDelete(postId: string) {
