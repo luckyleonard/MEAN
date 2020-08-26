@@ -34,6 +34,12 @@ export class PostsService {
       }); //subscribe才会发起http请求
   }
 
+  getPost(postId: string) {
+    return this.httpClient.get<{ _id: string; title: string; content: string }>(
+      'http://localhost:3000/api/posts/' + postId
+    );
+  }
+
   getPostsUpdatedListener() {
     return this.postsUpdated.asObservable();
   }
@@ -50,6 +56,16 @@ export class PostsService {
         this.posts.push(post); //更新本地数据
         this.postsUpdated.next([...this.posts]); //更新observable
       });
+  }
+
+  updatePost(postId: string, title: string, content: string) {
+    const post: Post = { id: postId, title, content };
+    this.httpClient
+      .patch<{ message: string }>(
+        'http://localhost:3000/api/posts/' + postId,
+        post
+      )
+      .subscribe((response) => console.log(response));
   }
 
   deletePost(postId: string) {
