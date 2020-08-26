@@ -22,7 +22,13 @@
       >
         Upload Image
       </button>
-      <input type="file" #fileUploader />
+      <input type="file" #fileUploader (change)="onImageChange($event)" />
+    </div>
+    <div
+      class="image-previewer"
+      *ngIf="imagePreviewUrl && imagePreviewUrl !== ''"
+    >
+      <img [src]="imagePreviewUrl" [alt]="form.value.title" />
     </div>
     <mat-form-field>
       <textarea
